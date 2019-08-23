@@ -3,8 +3,11 @@ package cn.liuyangjob.JoinService;
 import cn.liuyangjob.PhoneData.PhoneData;
 import cn.liuyangjob.bean.PlatformActivitiesJoin;
 import cn.liuyangjob.util.HttpUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +32,26 @@ import java.util.Map;
 public class JoinerService {
     @Autowired
     cn.liuyangjob.service.JoinService joinService;
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
+
 
     public String fillAndSendObject(PlatformActivitiesJoin join) {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("mobile", PhoneData.getMobile());
+        String mobile = null;
+
+        boolean flag = true;
+        do {
+            mobile = PhoneData.getMobile();
+            String data = stringRedisTemplate.opsForValue().get(mobile);
+            if (data == null) {
+                flag = false;
+            }else{
+                mobile = PhoneData.getMobile();
+            }
+        } while (flag);
+
+        params.put("mobile", mobile);
         params.put("nickname", join.getNickname());
         params.put("code", "999888");
         params.put("describe", "1");
@@ -44,10 +63,20 @@ public class JoinerService {
         params.put("imgsrcs", join.getImgsrcs());
         String res = null;
         try {
-            String url = "http://www.gjyunying.com/";
-           // String url = "http://www.t.gjyydh.com/";
-            res = HttpUtil.postForm(url + "active/mb/signUpDo", params);
-        } catch (IOException e) {
+            // String url = "http://www.gjying.com/";
+            String url = "http://www.t.gjyydh.com/";
+            //res = HttpUtil.postForm(url + "active/mb/signUpDo", params);
+            JSONObject jsonObject = JSONObject.parseObject(res);
+            String success = "true";//jsonObject.getString("success");
+            if ("true".equals(success)) {
+                System.out.println("mymobile"+mobile);
+                stringRedisTemplate.opsForValue().set(mobile, "1");
+                System.out.println("导弹发送成功！");
+            } else {
+                stringRedisTemplate.opsForValue().set(mobile, "1");
+                System.out.println("导弹发送失败！");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return res;

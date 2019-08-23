@@ -18,7 +18,7 @@ import java.util.concurrent.BlockingQueue;
  **/
 
 public class PhoneData {
-    private static BlockingQueue<String> mobiles = new ArrayBlockingQueue<String>(100);
+    private static BlockingQueue<String> mobiles = new ArrayBlockingQueue<String>(200);
     static Map<String,String> map = new HashMap<>();
     volatile static int i=0;
     static{

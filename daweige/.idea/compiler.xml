@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="daweige" />
+        <module name="mb" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="daweige" target="1.8" />
+      <module name="mb" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

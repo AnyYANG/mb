@@ -7,6 +7,7 @@ import cn.liuyangjob.util.HttpUtil;
 import cn.liuyangjob.util.MyThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,12 +31,14 @@ public class MyJoinPlayerController {
     JoinService joinService;
     @Autowired
     JoinerService joinerService;
-
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
     @RequestMapping("/index")
     public Object index() {
-
-        return "welecome";
+        stringRedisTemplate.opsForValue().set("abc","123");
+        String result =  stringRedisTemplate.opsForValue().get("abc");
+        return "welecome"+result;
     }
 
     /**
@@ -120,7 +123,7 @@ public class MyJoinPlayerController {
         StringBuffer res = new StringBuffer();
         int baseTime = 0;
         lists.forEach(join -> {
-            int sleepTime = baseTime + new Random().nextInt(60000) + new Random().nextInt(60000)+ new Random().nextInt(60000);
+            int sleepTime = baseTime + new Random().nextInt(6000) + new Random().nextInt(6000)+ new Random().nextInt(6000);
             System.out.println(Thread.currentThread().getName() + "*****sleep:" + sleepTime / 1000 + "s");
             Runnable saverun = () -> {
                 try {
