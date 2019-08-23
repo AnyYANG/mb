@@ -16,5 +16,5 @@ import java.util.List;
 @Repository
 public interface JoinService extends JpaRepository<PlatformActivitiesJoin, Long>, JpaSpecificationExecutor<PlatformActivitiesJoin> {
     public List<PlatformActivitiesJoin> getPlatformActivitiesJoinByPlatformActivitiesId(Long PlatformActivitiesId);
-
+    public PlatformActivitiesJoin getPlatformActivitiesJoinByIndexAndPlatformActivitiesId(long index,Long PlatformActivitiesId);
 }

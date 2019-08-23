@@ -47,6 +47,7 @@ public class JoinerService {
             if (data == null) {
                 flag = false;
             }else{
+                System.out.println(data + "重复使用手机号已经被发现：" +mobile);
                 mobile = PhoneData.getMobile();
             }
         } while (flag);
@@ -54,7 +55,7 @@ public class JoinerService {
         params.put("mobile", mobile);
         params.put("nickname", join.getNickname());
         params.put("code", "999888");
-        params.put("describe", "1");
+        params.put("describe", "");
         params.put("platformActivitiesId", "5");
         params.put("provinceId", join.getProvinceId() == null ? "" : join.getProvinceId() + "");
         params.put("cityId", join.getCityId() == null ? "" : join.getCityId() + "");
@@ -63,18 +64,19 @@ public class JoinerService {
         params.put("imgsrcs", join.getImgsrcs());
         String res = null;
         try {
-            // String url = "http://www.gjying.com/";
-            String url = "http://www.t.gjyydh.com/";
-            //res = HttpUtil.postForm(url + "active/mb/signUpDo", params);
-            JSONObject jsonObject = JSONObject.parseObject(res);
-            String success = "true";//jsonObject.getString("success");
+            String url = "http://www.gjyunying.com/";
+          //  String url = "http://www.t.gjyydh.com/";
+            res = HttpUtil.postForm(url + "active/mb/signUpDo", params);
+           JSONObject jsonObject = JSONObject.parseObject(res);
+            String success = jsonObject.getString("success");
             if ("true".equals(success)) {
                 System.out.println("mymobile"+mobile);
                 stringRedisTemplate.opsForValue().set(mobile, "1");
                 System.out.println("导弹发送成功！");
             } else {
                 stringRedisTemplate.opsForValue().set(mobile, "1");
-                System.out.println("导弹发送失败！");
+                System.out.println("导弹发送失败！重启导弹发射程序！");
+                fillAndSendObject(join);
             }
         } catch (Exception e) {
             e.printStackTrace();

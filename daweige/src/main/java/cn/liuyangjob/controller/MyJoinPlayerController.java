@@ -92,28 +92,6 @@ public class MyJoinPlayerController {
         return joins;
     }
 
-    @RequestMapping("/resigerUser")
-    public Object resigerNewUser() {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mobile", "18269306677");
-        params.put("nickname", "Smith");
-        params.put("code", "999888");
-        params.put("describe", "999888");
-        params.put("platformActivitiesId", "5");
-        params.put("provinceId", "17");
-        params.put("cityId", "202");
-        params.put("townId", "2046");
-        params.put("address", "ihiuhi");
-        params.put("imgsrcs", "http://static.t.gjyydh.com/upload/gjyy/mlym2/20190816/1565948000505265324.jpg#http://static.t.gjyydh.com/upload/gjyy/mlym2/20190816/1565948000498621212.jpg#http://static.t.gjyydh.com/upload/gjyy/mlym2/20190816/1565948000515527100.jpg#http://static.t.gjyydh.com/upload/gjyy/mlym2/20190816/1565948000816147824.jpg");
-        String res = null;
-        try {
-            res = HttpUtil.postForm("http://www.t.gjyydh.com/active/mb/signUpDo", params);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // append query parameters to url
-        return res;
-    }
 
 
     @RequestMapping("/resigerUserbatch")
@@ -123,14 +101,13 @@ public class MyJoinPlayerController {
         StringBuffer res = new StringBuffer();
         int baseTime = 0;
         lists.forEach(join -> {
-            int sleepTime = baseTime + new Random().nextInt(6000) + new Random().nextInt(6000)+ new Random().nextInt(6000);
+            int sleepTime = baseTime + new Random().nextInt(60000) + new Random().nextInt(60000)+ new Random().nextInt(60000)+new Random().nextInt(60000)+new Random().nextInt(60000)+new Random().nextInt(60000);
             System.out.println(Thread.currentThread().getName() + "*****sleep:" + sleepTime / 1000 + "s");
             Runnable saverun = () -> {
                 try {
                     Thread.sleep(sleepTime);
                     String result = joinerService.fillAndSendObject(join);
-                    System.out.println("save success:" + result);
-                } catch (InterruptedException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             };
